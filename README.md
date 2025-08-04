@@ -85,6 +85,22 @@ This command will evaluate the performance of the chosen checkpoint, display the
 Please cite ROTLEX in your publications with the following bibtex if it helps your research:
 
 ```
+@inproceedings{10.1145/3711896.3737112,
+author = {Wei, Wenqing and Lian, Defu and Feng, Qingshuai and Wu, Yongji},
+title = {Robust Tree-based Learned Vector Index with Query-aware Repartitioning},
+year = {2025},
+isbn = {9798400714542},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3711896.3737112},
+doi = {10.1145/3711896.3737112},
+booktitle = {Proceedings of the 31st ACM SIGKDD Conference on Knowledge Discovery and Data Mining V.2},
+pages = {3134–3143},
+numpages = {10},
+keywords = {approximate nearest neighbor search (anns), learning-to-index, maximum inner product search (mips), vector retrieval},
+location = {Toronto ON, Canada},
+series = {KDD '25}
+}
 ```
 
 # License
