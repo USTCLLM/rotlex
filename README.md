@@ -1,12 +1,25 @@
 # ROLTEX
 
-Implentmentation of *Robust Tree-based Learned Vector Index with Query-aware Repartitioning*.
+Implementation of *Robust Tree-based Learned Vector Index with Query-aware Repartitioning*.
 
 # Prerequisites
+
+Install dependencies:
+
+```
+conda create -n anns_env python=3.11 gcc make cmake tqdm swig mkl=2023 mkl-devel=2023 numpy scipy pytest cmake loguru tensorboard pytorch pytorch-cuda=11.8 -c conda-forge -c pytorch -c nvidia
+```
+
+Alternatively, you can install the dependencies from yml.
+
+```
+conda env create -n anns_env -f environment.yml
+```
 
 Install our modified [faiss](https://github.com/weiwch/faiss_preassigned) that supports add_preassigned & search_preassigned for IVF indexes(`IndexIVF` and `IndexShardsIVF`). Set `CMAKE_CUDA_ARCHITECTURES`, `BLA_VENDOR` and `DFAISS_OPT_LEVEL` below appropriately for your system. You can refer to the faiss documentation for details. (We are working to merge this feature into the main branch; see [this issue](https://github.com/facebookresearch/faiss/issues/3908)).
 
 ```
+conda activate anns_env
 cd faiss_preassigned
 
 cmake -B _build \
@@ -16,46 +29,18 @@ cmake -B _build \
       -DFAISS_ENABLE_GPU=ON \
       -DFAISS_ENABLE_RAFT=OFF \
       -DCMAKE_CUDA_ARCHITECTURES=75 \
-      -DFAISS_ENABLE_PYTHON=OFF \
+      -DFAISS_ENABLE_PYTHON=ON \
       -DBLA_VENDOR=Intel10_64lp \
       -DCMAKE_INSTALL_LIBDIR=lib \
       -DCMAKE_BUILD_TYPE=Release .
 
-make -C _build -j$(nproc) faiss faiss_avx2 faiss_avx512
-
-cmake --install _build --prefix _libfaiss_stage/
-
-cmake -B _build_python \
-      -Dfaiss_ROOT=_libfaiss_stage/ \
-      -DFAISS_OPT_LEVEL=avx512 \
-      -DFAISS_ENABLE_GPU=ON \
-      -DFAISS_ENABLE_RAFT=OFF \
-      -DCMAKE_BUILD_TYPE=Release \
-      -DPython_EXECUTABLE=$PYTHON \
-      faiss/python
-
-make -C _build_python -j$(nproc) swigfaiss swigfaiss_avx2 swigfaiss_avx512
-
-cp -v _libfaiss_stage/lib/libfaiss* _build_python
-```
-
-Install other dependencies:
-
-```
-conda create -n anns_env python=3.11 tqdm swig mkl=2023 mkl-devel=2023 numpy scipy pytest cmake loguru tensorboard pytorch pytorch-cuda=11.8 -c pytorch -c nvidia
-```
-
-Alternatively, you can install the dependencies from yml.
-
-```
-conda env create -n anns_env -f environment.yml
+make -C _build -j$(nproc) faiss faiss_avx2 faiss_avx512 swigfaiss swigfaiss_avx2 swigfaiss_avx512
 ```
 
 Install our compiled faiss into the conda environment created.
 
 ```
-conda activate anns_env
-cd faiss_preassigned
+cd _build/faiss/python
 pip install .
 ```
 

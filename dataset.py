@@ -96,8 +96,28 @@ class Laion(AnnDatasetSelfTrain):
         
         self.self_train_gt_fn = 'laion-10M.self_learn_ip.10M.ibin'
 
+class Webvid_Linf(AnnDatasetSelfTrain):
+    # https://zenodo.org/records/11090378
+    # {'nb': 2505000, 'dim': 512, 'train_queries': (2500000, 512), 'train_gts': (2500000, 100), 'test_queries': (10000, 512), 'test_gts': (10000, 100), 'self_train_gts': (2505000, 100)}
+    # OOD
+    # l2-normalized
+    def __init__(self, train_set_len = -1, self_train_set_len = -1, path = "../webvid_split") -> None:
+        super().__init__("webvid-2.5M", "linf", path, train_set_len, self_train_set_len)
+        
+        self.base_fn = 'clip.webvid.base.2.5M.fbin' # Video
+        
+        self.train_query_fn = 'webvid.query.train.2.5M.fbin' # Text
+        self.train_gt_fn = '../webvid_linf/webvid-2.5M.train_linf.ivecs'
+        
+        self.test_query_fn = 'webvid.query.10k.fbin' # Text
+        self.test_gt_fn = '../webvid_linf/webvid-2.5M.test_linf.ivecs'
+        
+        self.self_test_query_fn = 'self_webvid.query.10k.fbin'
+        self.self_test_gt_fn = '../webvid_linf/webvid-2.5M.self_test_linf.ivecs'
+         
+        self.self_train_gt_fn = '../webvid_linf/webvid-2.5M.self_train_linf.ivecs'
 
-dataset_dict = { 'Deep100M':Deep100M,'Laion':Laion,'Sift1M':Sift1M,'Text2image10M':Text2image10M,'Webvid':Webvid }
+dataset_dict = { 'Deep100M':Deep100M,'Laion':Laion,'Sift1M':Sift1M,'Text2image10M':Text2image10M,'Webvid':Webvid,'Webvid_Linf':Webvid_Linf }
 
 def dataset_factory(dataset_name, train_set_len = -1, self_train_set_len = -1, read_mode = "only_test"):
     if dataset_name in dataset_dict:

@@ -309,6 +309,8 @@ class TreeANNs:
         dim = self.data.shape[-1]
         if self.metric == "ip":
             measure = faiss.METRIC_INNER_PRODUCT
+        if self.metric == "linf":
+            measure = faiss.METRIC_Linf
         else:
             measure = faiss.METRIC_L2
         if self.conf.ivf_device.startswith("cuda"):
